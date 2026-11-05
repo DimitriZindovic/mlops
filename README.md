@@ -30,8 +30,23 @@ du notebook à la production sur Azure Machine Learning. Tout le code est dans `
 
 | Run                          | class_weight | test_size | accuracy | precision | recall    | f1    | auc   |
 | ---------------------------- | ------------ | --------- | -------- | --------- | --------- | ----- | ----- |
-| intention-mlflow-none-20     | none         | 0,2       | 0,881    | 0,737     | 0,359     | 0,482 | 0,887 |
-| intention-mlflow-balanced-30 | balanced     | 0,3       | 0,854    | 0,520     | **0,747** | 0,613 | 0,900 |
+| intention-mlflow-none-20     | none         | 0,2       | 0,881    | 0,743     | 0,356     | 0,481 | 0,887 |
+| intention-mlflow-balanced-30 | balanced     | 0,3       | 0,853    | 0,517     | **0,748** | 0,611 | 0,900 |
 | Pipeline (prep + train)      | balanced     | 0,3       | –        | –         | ≥ 0,7     | –     | –     |
 
-`balanced` double le recall au prix d'une précision plus basse : c'est le compromis voulu. Le pipeline a enregistré `intention-model` version 1 (validation acceptée), puis déployé.
+`balanced` double le recall au prix d'une précision plus basse : c'est le compromis voulu. Chaque exécution du pipeline a validé le modèle : `intention-model` a deux versions, et la version 1 est celle déployée sur l'endpoint.
+
+## Preuves (dossier `captures/`)
+
+| Étape | Capture |
+| --- | --- |
+| 2 – Data asset | [02_data_asset.png](captures/02_data_asset.png) : `online_shoppers_intention`, versions 1 et 2, description |
+| 3 – Job | [03_jobs_completed.png](captures/03_jobs_completed.png) : `intention-logreg-baseline` et les autres jobs à l'état Completed |
+| 4 – MLflow | [04_comparaison_runs.png](captures/04_comparaison_runs.png) : comparaison `balanced-30` / `none-20` (paramètres et métriques) |
+| 4 – MLflow | [04_run_modele_signature.png](captures/04_run_modele_signature.png) : modèle enregistré dans le run, fichier `MLmodel` avec sa signature |
+| 5 – Pipeline | [05_pipeline_graphe.png](captures/05_pipeline_graphe.png) : graphe data → prep → train terminé |
+| 5 – Pipeline | [05_modele_versions.png](captures/05_modele_versions.png) : `intention-model` versions 1 et 2 issues du pipeline |
+| 6 – Déploiement | [06_endpoint_details.png](captures/06_endpoint_details.png) : endpoint Succeeded, `blue` à 100 %, Standard_F2s_v2 |
+| 6 – Déploiement | [06_test_studio.png](captures/06_test_studio.png) : onglet Test, prédictions `[0, 0, 1]` |
+| 6 – Déploiement | [06_test_python_http.png](captures/06_test_python_http.png) : appel HTTP en Python, code 200 |
+| 6 – Déploiement | [06_requete_incorrecte.png](captures/06_requete_incorrecte.png) : requête avec une seule colonne, erreur listant les 27 colonnes manquantes |
