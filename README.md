@@ -1,4 +1,4 @@
-# Groupe X – Online Shoppers Purchasing Intention
+# Sujet E – Online Shoppers Purchasing Intention
 
 Membres : Dimitri Zindovic, Aurore Dimech
 
